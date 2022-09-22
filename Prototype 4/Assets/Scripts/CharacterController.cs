@@ -25,28 +25,28 @@ public class CharacterController : MonoBehaviour
     {
         float verticalInput = Input.GetAxis("Vertical");
         charactersRigigdbody.AddForce(focalPoint.transform.forward * verticalInput * speed);
-        powerupIndicator.transform.position = transform.position + new Vector3(0, -0.5f, 0); // якщо вкладений обєєкт, то обертається
+        powerupIndicator.transform.position = transform.position + new Vector3(0, -0.5f, 0); // nested object rotates with character
     }
 
-    private void OnTriggerEnter(Collider other) // взаємодія
+    private void OnTriggerEnter(Collider other) // interaction, isTrigger checked
     {
         if (other.CompareTag("Powerup"))
         {
             hasPowerup = true;
             powerupIndicator.SetActive(true);
             Destroy(other.gameObject);
-            StartCoroutine(PowerupCountdownRoutine()); // запуск іншого потоку
+            StartCoroutine(PowerupCountdownRoutine()); // other thread works 
         }
     }
 
-    IEnumerator PowerupCountdownRoutine() // створення лічильника (таймера)
+    IEnumerator PowerupCountdownRoutine() // countdown
     {
         yield return new WaitForSeconds(7);
         hasPowerup = false;
         powerupIndicator.SetActive(false);
     }
 
-    private void OnCollisionEnter(Collision collision) // фізичне зіткнення
+    private void OnCollisionEnter(Collision collision) // physical collision
     {
         if(collision.gameObject.CompareTag("Enemy") && hasPowerup)
         {
